@@ -5,3 +5,9 @@
     flex-wrap: wrap;
     background-color: blue;
 }
+
+.grid div {
+    width: 100px;
+    height: 100px;
+    background-color:yellow;
+}
