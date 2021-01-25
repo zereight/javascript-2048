@@ -79,7 +79,7 @@ const mergeSameBlock = (nonZeros, direction) => {
       }
     }
   }
-  return nonZeros;
+  return nonZeros.filter(elem=>elem!=='0');
 };
 
 const keyUpEvent = (e) => {
