@@ -50,7 +50,7 @@ const move = (direction) => {
         }
       }
 
-      nonZeros = mergeSameBlock2(nonZeros, direction);
+      nonZeros = mergeSameBlock(nonZeros, direction);
       nonZeros = arrayMoveHelper(direction, nonZeros);
 
       for (let col = 0; col < 4; col++) {
@@ -59,18 +59,23 @@ const move = (direction) => {
         ].innerHTML = nonZeros[col];
       }
     }
+    randomPoint();
   }
 };
 
 const mergeSameBlock = (nonZeros, direction) => {
-  for (let i = 0; i < nonZeros.length - 1; i++) {
-    if (nonZeros[i] === nonZeros[i + 1]) {
-      if (direction === 37 || direction === 38) {
+  if (direction === 37 || direction === 38) {
+    for (let i = 0; i < nonZeros.length - 1; i++) {
+      if (nonZeros[i] === nonZeros[i + 1]) {
         nonZeros[i] = `${parseInt(nonZeros[i]) * 2}`;
         nonZeros[i + 1] = "0";
-      } else if (direction === 39 || direction === 40) {
-        nonZeros[i + 1] = `${parseInt(nonZeros[i]) * 2}`;
-        nonZeros[i] = "0";
+      }
+    }
+  } else if (direction === 39 || direction === 40) {
+    for (let i = nonZeros.length-1; i >= 0; i--) {
+      if (nonZeros[i] === nonZeros[i - 1]) {
+        nonZeros[i] = `${parseInt(nonZeros[i]) * 2}`;
+        nonZeros[i - 1] = "0";
       }
     }
   }
@@ -79,8 +84,6 @@ const mergeSameBlock = (nonZeros, direction) => {
 
 const keyUpEvent = (e) => {
   move(e.keyCode);
-
-  // randomPoint();
 };
 
 const init = () => {
