@@ -1,5 +1,38 @@
 const boardElement = document.querySelector(".board");
 
+const resultChecker = () => {
+  let isNothingOfZero = true;
+  let isNothingSameWithNeighbor = true;
+
+  for (let row = 0; row < 4; row++) {
+    for (let col = 0; col < 4; col++) {
+      if (boardElement.childNodes[row * 4 + col].innerHTML === "2048")
+        return "Win";
+      if (boardElement.childNodes[row * 4 + col].innerHTML === "0") {
+        isNothingOfZero = false;
+      }
+      if (col > 0) {
+        if (
+          boardElement.childNodes[row * 4 + col].innerHTML ===
+          boardElement.childNodes[row * 4 + col - 1].innerHTML
+        ) {
+          isNothingSameWithNeighbor = false;
+        }
+      }
+      if (row > 0) {
+        if (
+          boardElement.childNodes[row * 4 + col].innerHTML ===
+          boardElement.childNodes[row * 4 + col - 4].innerHTML
+        ) {
+          isNothingSameWithNeighbor = false;
+        }
+      }
+    }
+  }
+
+  return isNothingOfZero && isNothingSameWithNeighbor ? "Lose" : "";
+};
+
 const randomPoint = () => {
   let boxNumber = Math.floor(Math.random() * 16);
   if (
@@ -9,6 +42,7 @@ const randomPoint = () => {
     console.log("all cells filled");
     return;
   }
+
   while (Array.from(boardElement.childNodes)[boxNumber].innerHTML !== "0") {
     boxNumber = Math.floor(Math.random() * 16);
   }
@@ -55,8 +89,11 @@ const move = (direction) => {
       nonZeros = arrayMoveHelper(direction, nonZeros);
 
       for (let col = 0; col < 4; col++) {
-        if(nonZeros[col] !== boardElement.childNodes[pointMoveHelper(direction, row, col)]
-        .innerHTML){
+        if (
+          nonZeros[col] !==
+          boardElement.childNodes[pointMoveHelper(direction, row, col)]
+            .innerHTML
+        ) {
           isMoved = true;
         }
         boardElement.childNodes[
@@ -64,8 +101,17 @@ const move = (direction) => {
         ].innerHTML = nonZeros[col];
       }
     }
-    if(isMoved){
-      randomPoint();
+
+    let res = resultChecker();
+    console.log(res);
+    if (res === "Win") {
+      alert("Win");
+    } else if (res === "Lose") {
+      alert("Lose");
+    } else {
+      if (isMoved) {
+        randomPoint();
+      }
     }
   }
 };
@@ -79,14 +125,14 @@ const mergeSameBlock = (nonZeros, direction) => {
       }
     }
   } else if (direction === 39 || direction === 40) {
-    for (let i = nonZeros.length-1; i >= 0; i--) {
+    for (let i = nonZeros.length - 1; i >= 0; i--) {
       if (nonZeros[i] === nonZeros[i - 1]) {
         nonZeros[i] = `${parseInt(nonZeros[i]) * 2}`;
         nonZeros[i - 1] = "0";
       }
     }
   }
-  return nonZeros.filter(elem=>elem!=='0');
+  return nonZeros.filter((elem) => elem !== "0");
 };
 
 const keyUpEvent = (e) => {
