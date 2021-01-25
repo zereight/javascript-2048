@@ -47,10 +47,12 @@ const move = (direction) => {
             boardElement.childNodes[pointMoveHelper(direction, row, col)]
               .innerHTML
           );
-          // merge
         }
       }
+
+      nonZeros = mergeSameBlock2(nonZeros, direction);
       nonZeros = arrayMoveHelper(direction, nonZeros);
+
       for (let col = 0; col < 4; col++) {
         boardElement.childNodes[
           pointMoveHelper(direction, row, col)
@@ -60,36 +62,25 @@ const move = (direction) => {
   }
 };
 
-const mergeAdjacentSameBlock = (direction) => {
-  for (let row = 0; row < 4; row++) {
-    for (let col = 0; col < 4; col++) {
-      if (boardElement.childNodes[pointMoveHelper(direction, row, col)] && boardElement.childNodes[pointMoveHelper(direction, row, col) + (direction === 38 || direction === 40) ? 4 : 1]) {
-        if (
-          boardElement.childNodes[pointMoveHelper(direction, row, col)]
-            .innerHTML ===
-          boardElement.childNodes[pointMoveHelper(direction, row, col) + (direction === 38 || direction === 40) ? 4 : 1]
-            .innerHTML
-        ) {
-          boardElement.childNodes[
-            pointMoveHelper(direction, row, col)
-          ].innerHTML =
-            `${parseInt(
-              boardElement.childNodes[pointMoveHelper(direction, row, col)]
-                .innerHTML
-            ) * 2}`;
-          boardElement.childNodes[
-            pointMoveHelper(direction, row, col) + (direction === 38 || direction === 40) ? 4 : 1
-          ].innerHTML = "0";
-        }
+const mergeSameBlock = (nonZeros, direction) => {
+  for (let i = 0; i < nonZeros.length - 1; i++) {
+    if (nonZeros[i] === nonZeros[i + 1]) {
+      if (direction === 37 || direction === 38) {
+        nonZeros[i] = `${parseInt(nonZeros[i]) * 2}`;
+        nonZeros[i + 1] = "0";
+      } else if (direction === 39 || direction === 40) {
+        nonZeros[i + 1] = `${parseInt(nonZeros[i]) * 2}`;
+        nonZeros[i] = "0";
       }
     }
   }
+  return nonZeros;
 };
 
 const keyUpEvent = (e) => {
   move(e.keyCode);
-  mergeAdjacentSameBlock(e.keyCode);
-  move(e.keyCode);
+
+  // randomPoint();
 };
 
 const init = () => {
