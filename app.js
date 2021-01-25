@@ -103,7 +103,7 @@ const move = (direction) => {
     }
 
     let res = resultChecker();
-    console.log(res);
+    
     if (res === "Win") {
       alert("Win");
     } else if (res === "Lose") {
