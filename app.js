@@ -35,6 +35,7 @@ const arrayMoveHelper = (direction, nonZeros) => {
 
 const move = (direction) => {
   // direction 38,40,37,39 => T,B,L,R
+  let isMoved = false;
   if (37 <= direction && direction <= 40) {
     for (let row = 0; row < 4; row++) {
       let nonZeros = [];
@@ -54,12 +55,18 @@ const move = (direction) => {
       nonZeros = arrayMoveHelper(direction, nonZeros);
 
       for (let col = 0; col < 4; col++) {
+        if(nonZeros[col] !== boardElement.childNodes[pointMoveHelper(direction, row, col)]
+        .innerHTML){
+          isMoved = true;
+        }
         boardElement.childNodes[
           pointMoveHelper(direction, row, col)
         ].innerHTML = nonZeros[col];
       }
     }
-    randomPoint();
+    if(isMoved){
+      randomPoint();
+    }
   }
 };
 
