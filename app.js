@@ -1,11 +1,36 @@
 const boardElement = document.querySelector(".board");
 
+const colorDict = {
+  2: "#D5C920",
+  4: "#BBB128",
+  6: "#999237",
+  8: "#7B773A",
+  16: "#5FDC28",
+  32: "#62B63D",
+  64: "#598844",
+  128: "#18D9AB",
+  256: "#37AB90",
+  512: "#3E8B79",
+  1024: "#1C35D5",
+  2048: "#FF4770",
+};
+
+const colorChanger = () => {
+  for(let i=0; i<16; i++){
+    boardElement.childNodes[i].style = `background-color:${colorDict[
+      boardElement.childNodes[i].innerHTML
+    ]};`;
+  }
+  
+};
+
 const resultChecker = () => {
   let isNothingOfZero = true;
   let isNothingSameWithNeighbor = true;
 
   for (let row = 0; row < 4; row++) {
     for (let col = 0; col < 4; col++) {
+      colorChanger();
       if (boardElement.childNodes[row * 4 + col].innerHTML === "2048")
         return "Win";
       if (boardElement.childNodes[row * 4 + col].innerHTML === "0") {
@@ -103,7 +128,7 @@ const move = (direction) => {
     }
 
     let res = resultChecker();
-    
+
     if (res === "Win") {
       alert("Win");
     } else if (res === "Lose") {
@@ -151,6 +176,7 @@ const init = () => {
 
   randomPoint();
   randomPoint();
+  colorChanger();
 };
 
 init();
