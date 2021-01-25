@@ -17,11 +17,11 @@ const randomPoint = () => {
 };
 
 const pointMoveHelper = (direction, row, col) => {
-    if(direction === 38 || direction === 40){
-        return col * 4 + row;
-    }else if(direction === 37 || direction === 39){
-        return row * 4 + col;
-    }
+  if (direction === 38 || direction === 40) {
+    return col * 4 + row;
+  } else if (direction === 37 || direction === 39) {
+    return row * 4 + col;
+  }
 };
 
 const arrayMoveHelper = (direction, nonZeros) => {
@@ -35,24 +35,60 @@ const arrayMoveHelper = (direction, nonZeros) => {
 
 const move = (direction) => {
   // direction 38,40,37,39 => T,B,L,R
-  if (37<=direction && direction <=40) {
+  if (37 <= direction && direction <= 40) {
     for (let row = 0; row < 4; row++) {
       let nonZeros = [];
       for (let col = 0; col < 4; col++) {
-        if (boardElement.childNodes[pointMoveHelper(direction, row, col)].innerHTML !== "0") {
-          nonZeros.push(boardElement.childNodes[pointMoveHelper(direction, row, col)].innerHTML);
+        if (
+          boardElement.childNodes[pointMoveHelper(direction, row, col)]
+            .innerHTML !== "0"
+        ) {
+          nonZeros.push(
+            boardElement.childNodes[pointMoveHelper(direction, row, col)]
+              .innerHTML
+          );
           // merge
         }
       }
       nonZeros = arrayMoveHelper(direction, nonZeros);
       for (let col = 0; col < 4; col++) {
-        boardElement.childNodes[pointMoveHelper(direction, row, col)].innerHTML = nonZeros[col];
+        boardElement.childNodes[
+          pointMoveHelper(direction, row, col)
+        ].innerHTML = nonZeros[col];
       }
     }
-  } 
+  }
+};
+
+const mergeAdjacentSameBlock = (direction) => {
+  for (let row = 0; row < 4; row++) {
+    for (let col = 0; col < 4; col++) {
+      if (boardElement.childNodes[pointMoveHelper(direction, row, col)] && boardElement.childNodes[pointMoveHelper(direction, row, col) + (direction === 38 || direction === 40) ? 4 : 1]) {
+        if (
+          boardElement.childNodes[pointMoveHelper(direction, row, col)]
+            .innerHTML ===
+          boardElement.childNodes[pointMoveHelper(direction, row, col) + (direction === 38 || direction === 40) ? 4 : 1]
+            .innerHTML
+        ) {
+          boardElement.childNodes[
+            pointMoveHelper(direction, row, col)
+          ].innerHTML =
+            `${parseInt(
+              boardElement.childNodes[pointMoveHelper(direction, row, col)]
+                .innerHTML
+            ) * 2}`;
+          boardElement.childNodes[
+            pointMoveHelper(direction, row, col) + (direction === 38 || direction === 40) ? 4 : 1
+          ].innerHTML = "0";
+        }
+      }
+    }
+  }
 };
 
 const keyUpEvent = (e) => {
+  move(e.keyCode);
+  mergeAdjacentSameBlock(e.keyCode);
   move(e.keyCode);
 };
 
